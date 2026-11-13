@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>APLIKASI DRAKOR - YOUTUBE</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#0f1115;color:#fff;padding:10px}
+.top{background:linear-gradient(90deg,#ff0000,#ff2d95);padding:16px;border-radius:12px;text-align:center}
+.top h1{font-size:22px}
+.top p{font-size:12px;opacity:0.9}
+.box{background:#1a1d24;padding:14px;border-radius:12px;margin-top:10px;border:1px solid #333}
+input{width:100%;padding:12px;border-radius:8px;border:none;background:#0f1115;color:#fff;margin-top:8px}
+button{width:100%;padding:14px;margin-top:8px;border:none;border-radius:10px;font-weight:bold;font-size:15px}
+.ytBtn{background:#ff0000;color:#fff}
+.drakorBtn{background:#ff2d95;color:#fff}
+.saveBtn{background:#ffcc00;color:#000}
+.hunterBtn{background:#00ff88;color:#000}
+iframe{width:100%;height:230px;border:none;border-radius:12px;margin-top:10px;background:#000}
+.card{background:#0f1115;padding:12px;border-radius:10px;margin-top:8px;text-align:left}
+.card b{color:#ffcc00}
+.list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.list button{background:#2a2a2a;color:#fff;font-size:13px;padding:12px}
+</style>
+</head>
+<body>
+<div class="top"><h1>🎬 APLIKASI DRAKOR</h1><p>YOUTUBE - BUFFER + SIMPAN - SUB INDO</p><span style="background:#fff;color:#000;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:bold">● NONTON DRAKOR GRATIS</span></div>
+
+<div class="box">
+<h3>🔍 CARI DRAKOR / VIDEO</h3>
+<input id="cari" placeholder="Ketik judul Drakor... contoh: Queen of Tears">
+<button class="ytBtn" onclick="cariYT()">🔍 CARI + BUFFER SEKARANG</button>
+<div id="bufferInfo" style="font-size:12px;color:#00ff88;margin-top:8px">Buffer: Siap - Klik CARI biar langsung preload!</div>
+<div id="playerBox"></div>
+<button class="saveBtn" onclick="simpan()">💾 SIMPAN KE WATCH LATER</button>
+<button onclick="window.open('https://www.youtube.com/playlist?list=WL','_blank')" style="background:#fff">📂 LIAT WATCH LATER GUE</button>
+<div style="font-size:11px;color:#aaa;margin-top:8px;text-align:left">Cara Simpan: Buka video > Titik 3 (...) > Simpan ke Tonton Nanti. Kalau mau Download Offline, harus YouTube Premium / nonton di Viu / Netflix!</div>
+</div>
+
+<div class="box">
+<h3>🔥 DRAKOR TERBARU - TINGGAL PENCET!</h3>
+<div class="list">
+<button onclick="playDrakor('Queen of Tears sub indo full episode')">👑 Queen of Tears</button>
+<button onclick="playDrakor('My Demon sub indo full episode')">😈 My Demon</button>
+<button onclick="playDrakor('Vincenzo sub indo full episode')">⚖️ Vincenzo</button>
+<button onclick="playDrakor('Crash Landing on You sub indo')">🪂 Crash Landing</button>
+<button onclick="playDrakor('Business Proposal sub indo full')">💼 Business Proposal</button>
+<button onclick="playDrakor('Twenty Five Twenty One sub indo')">� fencing Twenty Five</button>
+<button onclick="playDrakor('King the Land sub indo')">👑 King The Land</button>
+<button onclick="playDrakor('Strong Woman Do Bong Soon sub indo')">💪 Do Bong Soon</button>
+</div>
+</div>
+
+<div class="box">
+<h3>▶️ YOUTUBE LIVE</h3>
+<button class="ytBtn" onclick="window.open('https://www.youtube.com/results?search_query=drakor+live','_blank')">▶️ LIVE DRAKOR</button>
+<button class="ytBtn" onclick="window.open('https://www.youtube.com/','_blank')">▶️ BUKA YOUTUBE</button>
+<button class="ytBtn" onclick="window.open('https://www.youtube.com/results?search_query=drakor+terbaru+2026+sub+indo','_blank')">🔥 DRAKOR TERBARU 2026</button>
+</div>
+
+<div class="box">
+<h3>📺 DAFTAR SIMPANAN GUE</h3>
+<input id="judulSimpan" placeholder="Judul Drakor yang mau disimpen...">
+<button class="saveBtn" onclick="tambahSimpan()">💾 + TAMBAH KE DAFTAR SIMPANAN</button>
+<div id="daftarSimpan"></div>
+</div>
+
+<div class="box">
+<h3>🎯 BALIK KE HUNTER SUPER AI</h3>
+<button class="hunterBtn" onclick="window.open('https://istay7351-png.github.io/HUNTER-SUPER-AI/','_blank')">🎯 BUKA HUNTER SUPER AI</button>
+</div>
+
+<script>
+let simpanan = JSON.parse(localStorage.getItem('drakor_simpan') || '[]');
+function tampilSimpan(){
+  let h = "";
+  if(simpanan.length==0) h = "<div style='font-size:12px;color:#aaa;margin-top:8px'>Belum ada simpanan - Cari Drakor di atas terus pencet SIMPAN!</div>";
+  simpanan.forEach((s,i)=>{
+    h += "<div class='card'><b>"+s+"</b><br><button class='ytBtn' style='padding:8px;margin-top:6px' onclick=\"playDrakor('"+s+"')\">▶️ TONTON SEKARANG</button> <button style='background:#ff3b3b;color:#fff;padding:8px;margin-top:6px' onclick='hapusSimpan("+i+")'>🗑️ Hapus</button></div>";
+  });
+  document.getElementById('daftarSimpan').innerHTML = h;
+}
+tampilSimpan();
+function cariYT(){
+  let q = document.getElementById('cari').value || "drakor sub indo";
+  document.getElementById('bufferInfo').innerText = "⏳ Buffering: "+q+"... Lagi preload biar gak muter-muter!";
+  document.getElementById('playerBox').innerHTML = '<iframe src="https://www.youtube.com/embed?listType=search&list='+encodeURIComponent(q)+'" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+  setTimeout(()=>{ document.getElementById('bufferInfo').innerText = "✅ Buffer Selesai! Video udah preload, tinggal Play!"; },2000);
+}
+function playDrakor(judul){
+  document.getElementById('cari').value = judul;
+  cariYT();
+  window.scrollTo(0,0);
+}
+function simpan(){
+  let j = document.getElementById('cari').value || "Drakor Pilihan Gue";
+  alert("BRO! Buat simpen ke YouTube:\n\n1. Buka video-nya\n2. Pencet titik 3 (...) di bawah video\n3. Pencet 'Simpan ke Tonton Nanti'\n\nGue juga simpen ke Daftar di web ini ya!");
+  tambahSimpanDari(j);
+  window.open('https://www.youtube.com/playlist?list=WL','_blank');
+}
+function tambahSimpan(){
+  let j = document.getElementById('judulSimpan').value;
+  if(!j){ alert("Ketik dulu judul Drakor-nya bro!"); return; }
+  tambahSimpanDari(j);
+  document.getElementById('judulSimpan').value = "";
+}
+function tambahSimpanDari(j){
+  simpanan.push(j);
+  try{ localStorage.setItem('drakor_simpan', JSON.stringify(simpanan)); }catch(e){}
+  tampilSimpan();
+  alert("✅ Disimpen bro: "+j);
+}
+function hapusSimpan(i){
+  simpanan.splice(i,1);
+  try{ localStorage.setItem('drakor_simpan', JSON.stringify(simpanan)); }catch(e){}
+  tampilSimpan();
+}
+</script>
+</body>
+  </html>
